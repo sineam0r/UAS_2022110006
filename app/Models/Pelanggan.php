@@ -12,7 +12,9 @@ class Pelanggan extends Model
     protected $fillable = [
         'nik',
         'nama',
+        'usia',
         'alamat',
         'no_telp',
+        'no_sim',
     ];
 }

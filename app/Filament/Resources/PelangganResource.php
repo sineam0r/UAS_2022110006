@@ -25,10 +25,12 @@ class PelangganResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('nik')->required()->label('NIK'),
+                TextInput::make('nik')->required()->label('NIK')->numeric(),
                 TextInput::make('nama')->required(),
+                TextInput::make('usia')->required()->numeric(),
                 TextInput::make('alamat')->required(),
                 TextInput::make('no_telp')->required()->label('Nomor Telepon'),
+                TextInput::make('no_sim')->label('Nomor SIM'),
             ]);
     }
 
@@ -39,8 +41,10 @@ class PelangganResource extends Resource
                 TextColumn::make('id')->sortable()->label('ID'),
                 TextColumn::make('nik')->label('NIK'),
                 TextColumn::make('nama'),
+                TextColumn::make('usia'),
                 TextColumn::make('alamat'),
                 TextColumn::make('no_telp')->label('Nomor Telepon'),
+                TextColumn::make('no_sim')->label('Nomor SIM'),
             ])
             ->filters([
                 //
