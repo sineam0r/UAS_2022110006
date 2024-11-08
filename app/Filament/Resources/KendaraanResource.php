@@ -9,9 +9,11 @@ use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -37,11 +39,19 @@ class KendaraanResource extends Resource
                 TextInput::make('merk')->required(),
                 TextInput::make('model')->required(),
                 TextInput::make('harga_sewa')->required()->numeric()->prefix('Rp.')->label('Harga Sewa per Hari'),
-                Select::make('status')
+                ToggleButtons::make('status')
                     ->options([
                         'Tersedia' => 'Tersedia',
                         'Tidak Tersedia' => 'Tidak Tersedia',
-                    ])->required()->default('Tersedia')->native(false),
+                    ])->required()->default('Tersedia')->grouped()
+                    ->colors([
+                        'Tersedia' => 'success',
+                        'Tidak Tersedia' => 'danger',
+                    ])
+                    ->icons([
+                        'Tersedia' => 'heroicon-o-check-circle',
+                        'Tidak Tersedia' => 'heroicon-o-x-circle',
+                    ]),
                 FileUpload::make('gambar'),
             ]);
     }
@@ -58,7 +68,7 @@ class KendaraanResource extends Resource
                 TextColumn::make('harga_sewa')->sortable()->label('Harga Sewa')
                     ->prefix('Rp. ')->formatStateUsing(fn($state) => number_format($state, 0, ',', '.'))
                     ->suffix('/hari'),
-                TextColumn::make('status'),
+                IconColumn::make('status')->boolean(),
                 ImageColumn::make('gambar'),
             ])
             ->filters([
