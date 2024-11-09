@@ -13,6 +13,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -21,7 +23,9 @@ class SupirResource extends Resource
 {
     protected static ?string $model = Supir::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+
+    protected static ?string $navigationGroup = 'Manajemen Data';
 
     public static function form(Form $form): Form
     {
@@ -47,18 +51,28 @@ class SupirResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->sortable()->label('ID'),
-                TextColumn::make('nama'),
+                TextColumn::make('nama')->searchable(),
                 TextColumn::make('usia'),
                 TextColumn::make('alamat'),
                 TextColumn::make('no_telp')->label('Nomor Telepon'),
-                TextColumn::make('lisensi')
-                    ->badge(),
+                TextColumn::make('lisensi')->badge(),
                 TextColumn::make('tarif')->sortable()->label('Tarif per Hari')
                     ->prefix('Rp. ')->formatStateUsing(fn($state) => number_format($state, 0, ',', '.'))->suffix('/hari'),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('lisensi')
+                    ->options([
+                        'A' => 'SIM A',
+                        'B1' => 'SIM B1',
+                        'B2' => 'SIM B2',
+                        'C' => 'SIM C',
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        if (!empty($data['value'])) {
+                            $query->where('lisensi', 'LIKE', "%{$data['value']}%");
+                        }
+                    }),
+                ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

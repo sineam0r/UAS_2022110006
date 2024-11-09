@@ -19,7 +19,9 @@ class PelangganResource extends Resource
 {
     protected static ?string $model = Pelanggan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
+
+    protected static ?string $navigationGroup = 'Manajemen Data';
 
     public static function form(Form $form): Form
     {
@@ -40,7 +42,7 @@ class PelangganResource extends Resource
             ->columns([
                 TextColumn::make('id')->sortable()->label('ID'),
                 TextColumn::make('nik')->label('NIK'),
-                TextColumn::make('nama'),
+                TextColumn::make('nama')->searchable(),
                 TextColumn::make('usia'),
                 TextColumn::make('alamat'),
                 TextColumn::make('no_telp')->label('Nomor Telepon'),

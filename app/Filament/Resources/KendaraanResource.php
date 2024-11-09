@@ -16,6 +16,8 @@ use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -24,7 +26,9 @@ class KendaraanResource extends Resource
 {
     protected static ?string $model = Kendaraan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-truck';
+
+    protected static ?string $navigationGroup = 'Manajemen Data';
 
     public static function form(Form $form): Form
     {
@@ -63,8 +67,8 @@ class KendaraanResource extends Resource
                 TextColumn::make('id')->sortable()->label('ID'),
                 TextColumn::make('jenis'),
                 TextColumn::make('no_polisi'),
-                TextColumn::make('merk'),
-                TextColumn::make('model'),
+                TextColumn::make('merk')->searchable(),
+                TextColumn::make('model')->searchable(),
                 TextColumn::make('harga_sewa')->sortable()->label('Harga Sewa')
                     ->prefix('Rp. ')->formatStateUsing(fn($state) => number_format($state, 0, ',', '.'))
                     ->suffix('/hari'),
@@ -72,7 +76,32 @@ class KendaraanResource extends Resource
                 ImageColumn::make('gambar'),
             ])
             ->filters([
-                //
+                SelectFilter::make('jenis')
+                    ->options([
+                        'Mobil' => 'Mobil',
+                        'Motor' => 'Motor',
+                    ]),
+                Filter::make('harga_sewa')
+                    ->form([
+                        TextInput::make('min')->numeric()->label('Min. Harga'),
+                        TextInput::make('max')->numeric()->label('Max. Harga'),
+                    ])->columns(2)
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when(
+                                $data['min'],
+                                fn (Builder $query) => $query->where('harga_sewa', '>=', $data['min'])
+                            )
+                            ->when(
+                                $data['max'],
+                                fn (Builder $query) => $query->where('harga_sewa', '<=', $data['max'])
+                            );
+                    }),
+                SelectFilter::make('status')
+                    ->options([
+                        'Tersedia' => 'Tersedia',
+                        'Tidak Tersedia' => 'Tidak Tersedia',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
