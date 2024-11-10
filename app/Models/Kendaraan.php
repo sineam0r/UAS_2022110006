@@ -18,4 +18,9 @@ class Kendaraan extends Model
         'status',
         'gambar',
     ];
+
+    public function rentals()
+    {
+        return $this->hasMany(Rental::class);
+    }
 }

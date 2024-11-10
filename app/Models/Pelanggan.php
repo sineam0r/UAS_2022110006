@@ -17,4 +17,9 @@ class Pelanggan extends Model
         'no_telp',
         'no_sim',
     ];
+
+    public function rentals()
+    {
+        return $this->hasMany(Rental::class);
+    }
 }

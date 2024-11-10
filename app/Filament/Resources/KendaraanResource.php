@@ -69,9 +69,7 @@ class KendaraanResource extends Resource
                 TextColumn::make('no_polisi'),
                 TextColumn::make('merk')->searchable(),
                 TextColumn::make('model')->searchable(),
-                TextColumn::make('harga_sewa')->sortable()->label('Harga Sewa')
-                    ->prefix('Rp. ')->formatStateUsing(fn($state) => number_format($state, 0, ',', '.'))
-                    ->suffix('/hari'),
+                TextColumn::make('harga_sewa')->sortable()->label('Harga Sewa')->numeric()->prefix('Rp. ')->suffix('/hari'),
                 IconColumn::make('status')->boolean(),
                 ImageColumn::make('gambar'),
             ])
@@ -104,9 +102,11 @@ class KendaraanResource extends Resource
                     ]),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

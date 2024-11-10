@@ -40,8 +40,7 @@ class PerlengkapanResource extends Resource
             ->columns([
                 TextColumn::make('id')->sortable()->label('ID'),
                 TextColumn::make('nama')->label('Nama Perlengkapan')->searchable(),
-                TextColumn::make('harga')->label('Harga Perlengkapan')
-                    ->prefix('Rp. ')->formatStateUsing(fn($state) => number_format($state, 0, ',', '.'))->suffix('/hari'),
+                TextColumn::make('harga')->label('Harga Perlengkapan')->prefix('Rp. ')->numeric()->suffix('/hari'),
             ])
             ->filters([
                 Filter::make('harga')
@@ -60,9 +59,11 @@ class PerlengkapanResource extends Resource
                     })
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
