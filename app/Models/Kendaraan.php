@@ -19,7 +19,7 @@ class Kendaraan extends Model
         'gambar',
     ];
 
-    public function rentals()
+    public function rental()
     {
         return $this->hasMany(Rental::class);
     }
