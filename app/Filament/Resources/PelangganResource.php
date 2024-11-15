@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PelangganResource\Pages;
 use App\Filament\Resources\PelangganResource\RelationManagers;
+use App\Filament\Resources\PelangganResource\Widgets\PelangganStats;
 use App\Models\Pelanggan;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
@@ -79,6 +80,13 @@ class PelangganResource extends Resource
             'create' => Pages\CreatePelanggan::route('/create'),
             'view' => Pages\ViewPelanggan::route('/{record}'),
             'edit' => Pages\EditPelanggan::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            PelangganStats::class,
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PerlengkapanResource\Pages;
 use App\Filament\Resources\PerlengkapanResource\RelationManagers;
+use App\Filament\Resources\PerlengkapanResource\Widgets\PerlengkapanStats;
 use App\Models\Perlengkapan;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
@@ -41,6 +42,7 @@ class PerlengkapanResource extends Resource
                 TextColumn::make('id')->sortable()->label('ID'),
                 TextColumn::make('nama')->label('Nama Perlengkapan')->searchable(),
                 TextColumn::make('harga')->label('Harga Perlengkapan')->prefix('Rp. ')->numeric()->suffix('/hari'),
+                TextColumn::make('stok')->label('Stok Perlengkapan')->sortable()->numeric(),
             ])
             ->filters([
                 Filter::make('harga')
@@ -86,6 +88,13 @@ class PerlengkapanResource extends Resource
             'create' => Pages\CreatePerlengkapan::route('/create'),
             'view' => Pages\ViewPerlengkapan::route('/{record}'),
             'edit' => Pages\EditPerlengkapan::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            PerlengkapanStats::class,
         ];
     }
 }

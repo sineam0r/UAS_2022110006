@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\KendaraanResource\Pages;
 use App\Filament\Resources\KendaraanResource\RelationManagers;
+use App\Filament\Resources\KendaraanResource\Widgets\KendaraanStats;
 use App\Models\Kendaraan;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
@@ -129,6 +130,13 @@ class KendaraanResource extends Resource
             'create' => Pages\CreateKendaraan::route('/create'),
             'view' => Pages\ViewKendaraan::route('/{record}'),
             'edit' => Pages\EditKendaraan::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            KendaraanStats::class,
         ];
     }
 }

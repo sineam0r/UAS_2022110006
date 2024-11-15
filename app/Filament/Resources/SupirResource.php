@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SupirResource\Pages;
 use App\Filament\Resources\SupirResource\RelationManagers;
+use App\Filament\Resources\SupirResource\Widgets\SupirStats;
 use App\Models\Supir;
 use Faker\Provider\ar_EG\Text;
 use Filament\Forms;
@@ -101,6 +102,13 @@ class SupirResource extends Resource
             'create' => Pages\CreateSupir::route('/create'),
             'view' => Pages\ViewSupir::route('/{record}'),
             'edit' => Pages\EditSupir::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            SupirStats::class,
         ];
     }
 }
