@@ -9,6 +9,7 @@ use App\Models\Supir;
 use Faker\Provider\ar_EG\Text;
 use Filament\Forms;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -34,8 +35,8 @@ class SupirResource extends Resource
             ->schema([
                 TextInput::make('nama')->required(),
                 TextInput::make('usia')->required()->numeric(),
-                TextInput::make('alamat')->required(),
-                TextInput::make('no_telp')->required()->label('Nomor Telepon'),
+                Textarea::make('alamat')->required(),
+                TextInput::make('no_telp')->required()->label('Nomor Telepon')->numeric(),
                 CheckboxList::make('lisensi')->required()
                     ->options([
                         'A' => 'SIM A',

@@ -71,7 +71,7 @@ class KendaraanResource extends Resource
                 TextColumn::make('merk')->searchable(),
                 TextColumn::make('model')->searchable(),
                 TextColumn::make('harga_sewa')->sortable()->label('Harga Sewa')->numeric()->prefix('Rp. ')->suffix('/hari'),
-                IconColumn::make('status')->boolean(),
+                TextColumn::make('status'),
                 ImageColumn::make('gambar'),
             ])
             ->filters([

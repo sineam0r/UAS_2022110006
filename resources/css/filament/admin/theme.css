@@ -1,0 +1,133 @@
+@import '/vendor/filament/filament/resources/css/theme.css';
+
+@config './tailwind.config.js';
+
+/* Custom theme colors */
+:root {
+    /* Using Amber as primary color since it's configured in AdminPanelProvider */
+    --primary-50: 255 251 235;
+    --primary-100: 254 243 199;
+    --primary-200: 253 230 138;
+    --primary-300: 252 211 77;
+    --primary-400: 251 191 36;
+    --primary-500: 245 158 11;
+    --primary-600: 217 119 6;
+    --primary-700: 180 83 9;
+    --primary-800: 146 64 14;
+    --primary-900: 120 53 15;
+    --primary-950: 69 26 3;
+}
+
+/* Custom card styling */
+.fi-card {
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    border-color: rgb(229 231 235);
+}
+
+.dark .fi-card {
+    border-color: rgb(31 41 55);
+}
+
+/* Custom button styling */
+.fi-btn {
+    border-radius: 0.5rem;
+    transition-property: color, background-color, border-color;
+    transition-duration: 200ms;
+}
+
+/* Primary button hover effect */
+.fi-btn-color-primary:hover {
+    background-color: rgb(217 119 6);
+}
+
+.dark .fi-btn-color-primary:hover {
+    background-color: rgb(245 158 11);
+}
+
+/* Custom table styling */
+.fi-ta-table {
+    background-color: white;
+    border-radius: 0.75rem;
+}
+
+.dark .fi-ta-table {
+    background-color: rgb(17 24 39);
+}
+
+/* Custom header styling */
+.fi-header {
+    background-color: white;
+    border-bottom: 1px solid rgb(229 231 235);
+}
+
+.dark .fi-header {
+    background-color: rgb(17 24 39);
+    border-color: rgb(31 41 55);
+}
+
+/* Custom sidebar styling */
+.fi-sidebar {
+    background-color: white;
+    border-right: 1px solid rgb(229 231 235);
+}
+
+.dark .fi-sidebar {
+    background-color: rgb(17 24 39);
+    border-color: rgb(31 41 55);
+}
+
+/* Custom form input styling */
+.fi-input {
+    border-radius: 0.5rem;
+    border-color: rgb(209 213 219);
+}
+
+.dark .fi-input {
+    border-color: rgb(55 65 81);
+}
+
+/* Custom select styling */
+.fi-select {
+    border-radius: 0.5rem;
+    border-color: rgb(209 213 219);
+}
+
+.dark .fi-select {
+    border-color: rgb(55 65 81);
+}
+
+/* Custom tab styling */
+.fi-tabs-item {
+    border-radius: 0.5rem;
+    transition-property: color, background-color;
+    transition-duration: 200ms;
+}
+
+/* Active tab state */
+.fi-tabs-item[aria-selected="true"] {
+    background-color: rgb(254 243 199);
+    color: rgb(217 119 6);
+}
+
+.dark .fi-tabs-item[aria-selected="true"] {
+    background-color: rgb(69 26 3);
+    color: rgb(251 191 36);
+}
+
+/* Custom modal styling */
+.fi-modal-window {
+    border-radius: 1rem;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+    background-color: white;
+}
+
+.dark .fi-modal-window {
+    background-color: rgb(17 24 39);
+}
+
+/* Custom notification styling */
+.fi-notification {
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}

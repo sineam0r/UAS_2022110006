@@ -8,11 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class MaintenanceStats extends ChartWidget
 {
-    protected static ?string $heading = 'Statistik Maintenance Berdasarkan Bulan';
+    protected static ?string $heading = 'Statistik Maintenance';
 
     protected function getData(): array
     {
-        // Mengelompokkan data berdasarkan bulan di kolom `tgl_maintenance` di database
         $maintenanceData = Maintenance::select(
                 DB::raw("DATE_FORMAT(tgl_maintenance, '%Y-%m') as bulan"),
                 DB::raw("COUNT(*) as jumlah")
@@ -21,7 +20,6 @@ class MaintenanceStats extends ChartWidget
             ->orderBy('bulan', 'asc')
             ->get();
 
-        // Mendapatkan label dan data
         $labels = $maintenanceData->pluck('bulan')->toArray();
         $data = $maintenanceData->pluck('jumlah')->toArray();
 
@@ -39,6 +37,6 @@ class MaintenanceStats extends ChartWidget
 
     protected function getType(): string
     {
-        return 'line';
+        return 'bar';
     }
 }

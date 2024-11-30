@@ -68,5 +68,11 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": {
+        "whizzy": {
+            "type": "composer",
+            "url": "https://whizzy.dev/composer"
+        }
+    }
 }

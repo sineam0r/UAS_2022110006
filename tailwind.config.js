@@ -1,4 +1,5 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
+const colors = require("tailwindcss/colors");
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -11,10 +12,17 @@ export default {
     ],
     theme: {
         extend: {
+            colors: {
+                danger: colors.rose,
+                primary: colors.purple,
+                success: colors.green,
+                warning: colors.yellow,
+            },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
         },
     },
-    plugins: [],
+    plugins: [require("@tailwindcss/forms"),
+        require("@tailwindcss/typography"),],
 };

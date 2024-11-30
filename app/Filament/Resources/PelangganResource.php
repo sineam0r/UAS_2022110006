@@ -32,8 +32,8 @@ class PelangganResource extends Resource
                 TextInput::make('nama')->required(),
                 TextInput::make('usia')->required()->numeric(),
                 TextInput::make('alamat')->required(),
-                TextInput::make('no_telp')->required()->label('Nomor Telepon'),
-                TextInput::make('no_sim')->label('Nomor SIM'),
+                TextInput::make('no_telp')->required()->label('Nomor Telepon')->numeric(),
+                TextInput::make('no_sim')->label('Nomor SIM')->numeric(),
             ]);
     }
 
