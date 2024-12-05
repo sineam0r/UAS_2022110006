@@ -32,10 +32,15 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->registration()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => '#2196f3',
+                'secondary' => '#64b5f6',
+                'success' => '#4caf50',
+                'danger' => '#f44336',
+                'warning' => '#ff9800',
+                'info' => '#03a9f4',
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
-            ->brandName('AmbaRental')
+            ->brandName('EZRent')
             ->sidebarWidth('17rem')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('no_telp');
             $table->string('lisensi');
             $table->decimal('tarif', 11, 2);
+            $table->string('status');
             $table->timestamps();
         });
     }

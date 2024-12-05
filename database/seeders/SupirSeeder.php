@@ -19,35 +19,40 @@ class SupirSeeder extends Seeder
                 'nama'=>'Rudi',
                 'usia'=>30,
                 'alamat'=>'Jl. Raya', 'no_telp'=>'08123456789', 'lisensi'=>'A',
-                'tarif'=>35000
+                'tarif'=>35000,
+                'status'=>'Tersedia'
             ],
             [
                 'id'=>2,
                 'nama'=>'Asep',
                 'usia'=>25,
                 'alamat'=>'Jl. Jend. Sudirman', 'no_telp'=>'081234567890', 'lisensi'=>'B2',
-                'tarif'=>30000
+                'tarif'=>30000,
+                'status'=>'Tersedia'
             ],
             [
                 'id'=>3,
                 'nama'=>'Budi',
                 'usia'=>40,
                 'alamat'=>'Jl. Jalan', 'no_telp'=>'081234567891', 'lisensi'=>'C',
-                'tarif'=>40000
+                'tarif'=>40000,
+                'status'=>'Tersedia'
             ],
             [
                 'id'=>4,
                 'nama'=>'Fuad',
                 'usia'=>28,
                 'alamat'=>'Jl. Dago', 'no_telp'=>'081234567892', 'lisensi'=>'A',
-                'tarif'=>32000
+                'tarif'=>32000,
+                'status'=>'Tersedia'
             ],
             [
                 'id'=>5,
                 'nama'=>'Reni',
                 'usia'=>32,
                 'alamat'=>'Jl. Anggrek', 'no_telp'=>'081234567893', 'lisensi'=>'B1',
-                'tarif'=>28000
+                'tarif'=>28000,
+                'status'=>'Tersedia'
             ],
         ]);
     }

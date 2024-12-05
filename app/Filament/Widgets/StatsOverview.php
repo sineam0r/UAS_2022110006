@@ -13,22 +13,29 @@ use Filament\Support\Colors\Color;
 
 class StatsOverview extends BaseWidget
 {
+    protected static ?string $pollingInterval = '5s';
+
+    protected static bool $isLazy = true;
+
     protected function getStats(): array
     {
+        $activeRentals = Rental::where('status', '!=', 'Selesai')
+            ->where('tgl_kembali', '>=', now())
+            ->get();
+
         $totalKendaraan = Kendaraan::count();
-        $kendaraanDisewa = Rental::where('tgl_kembali', '>=', now())->count();
+        $kendaraanDisewa = Kendaraan::where('status', 'Tidak Tersedia')->count();
         $kendaraanTersedia = $totalKendaraan - $kendaraanDisewa;
 
         $totalSupir = Supir::count();
-        $supirOnDuty = Rental::where('tgl_kembali', '>=', now())
-            ->whereNotNull('supir_id')
-            ->count();
+        $supirOnDuty = Supir::where('status', 'Bertugas')->count();
         $supirAvailable = $totalSupir - $supirOnDuty;
 
         $perlengkapanLow = Perlengkapan::where('stok', '<=', 2)->count();
         $totalStok = Perlengkapan::sum('stok');
 
-        $pelangganBulanIni = Pelanggan::whereMonth('created_at', now()->month)->count();
+        $pelangganBulanIni = Pelanggan::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)->count();
         $totalPelanggan = Pelanggan::count();
 
         return [
@@ -36,19 +43,31 @@ class StatsOverview extends BaseWidget
                 ->icon('heroicon-o-truck')
                 ->color('info')
                 ->description("$kendaraanTersedia Tersedia • $kendaraanDisewa Disewa")
-                ->descriptionIcon('heroicon-o-information-circle'),
+                ->descriptionIcon('heroicon-o-information-circle')
+                ->chart([
+                    $kendaraanTersedia,
+                    $kendaraanDisewa
+                ]),
 
             Stat::make('Total Pelanggan', $totalPelanggan)
                 ->icon('heroicon-o-users')
                 ->color('success')
                 ->description("+$pelangganBulanIni pelanggan bulan ini")
-                ->descriptionIcon('heroicon-o-arrow-trending-up'),
+                ->descriptionIcon('heroicon-o-arrow-trending-up')
+                ->chart([
+                    $totalPelanggan - $pelangganBulanIni,
+                    $pelangganBulanIni
+                ]),
 
             Stat::make('Total Supir', $totalSupir)
                 ->icon('heroicon-o-user-group')
                 ->color('warning')
-                ->description("$supirAvailable Available • $supirOnDuty On Duty")
-                ->descriptionIcon('heroicon-o-information-circle'),
+                ->description("$supirAvailable Tersedia • $supirOnDuty Bertugas")
+                ->descriptionIcon('heroicon-o-information-circle')
+                ->chart([
+                    $supirAvailable,
+                    $supirOnDuty
+                ]),
 
             Stat::make('Total Stok Perlengkapan', $totalStok)
                 ->icon('heroicon-o-cube')

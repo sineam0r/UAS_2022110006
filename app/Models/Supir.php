@@ -16,6 +16,7 @@ class Supir extends Model
         'no_telp',
         'lisensi',
         'tarif',
+        'status',
     ];
 
     public function setLisensiAttribute($value)

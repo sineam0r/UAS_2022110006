@@ -11,6 +11,7 @@ use Filament\Forms;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -45,6 +46,11 @@ class SupirResource extends Resource
                         'C' => 'SIM C',
                     ])->columns(4),
                 TextInput::make('tarif')->required()->numeric()->prefix('Rp.')->label('Tarif per Hari'),
+                ToggleButtons::make('status')
+                    ->options([
+                        'Tersedia' => 'Tersedia',
+                        'Bertugas' => 'Bertugas',
+                ])->inline()->default('Tersedia')
             ]);
     }
 
@@ -60,6 +66,7 @@ class SupirResource extends Resource
                 TextColumn::make('lisensi')->badge(),
                 TextColumn::make('tarif')->sortable()->label('Tarif per Hari')
                     ->prefix('Rp. ')->formatStateUsing(fn($state) => number_format($state, 0, ',', '.'))->suffix('/hari'),
+                TextColumn::make('status')->badge(),
             ])
             ->filters([
                 SelectFilter::make('lisensi')

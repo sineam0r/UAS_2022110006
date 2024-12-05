@@ -35,51 +35,86 @@ class RentalResource extends Resource
         return $form
             ->schema([
                 Select::make('kendaraan_id')->required()->label('Kendaraan')
-                ->options(
-                    Kendaraan::all()->mapWithKeys(function ($kendaraan) {
+                ->options(function ($get, $record) {
+                    $availableVehicles = Kendaraan::where('status', 'Tersedia')
+                        ->get();
+
+                    if ($record) {
+                        $currentVehicle = Kendaraan::find($record->kendaraan_id);
+                        if ($currentVehicle && !$availableVehicles->contains('id', $currentVehicle->id)) {
+                            $availableVehicles->push($currentVehicle);
+                        }
+                    }
+
+                    return $availableVehicles->mapWithKeys(function ($kendaraan) {
                         return [
                             $kendaraan->id => "{$kendaraan->no_polisi} - {$kendaraan->merk} {$kendaraan->model}",
                         ];
-                    })
-                )->reactive()
-                    ->afterStateUpdated(fn($state, callable $set, $get) =>
-                        $set('harga', Rental::hitungTotalHarga(
-                            $state,
-                            $get('supir_id'),
-                            $get('tgl_pinjam'),
-                            $get('tgl_kembali'),
-                            $get('perlengkapan')
-                        ))
-                    ),
-                Select::make('supir_id')->relationship('supir', 'nama')->reactive()
-                    ->afterStateUpdated(fn($state, callable $set, $get) =>
-                        $set('harga', Rental::hitungTotalHarga(
-                            $get('kendaraan_id'),
-                            $state,
-                            $get('tgl_pinjam'),
-                            $get('tgl_kembali'),
-                            $get('perlengkapan')
-                        ))
-                    ),
+                    });
+                })
+                ->reactive()
+                ->afterStateUpdated(fn($state, callable $set, $get) =>
+                    $set('harga', Rental::hitungTotalHarga(
+                        $state,
+                        $get('supir_id'),
+                        $get('tgl_pinjam'),
+                        $get('tgl_kembali'),
+                        $get('perlengkapan')
+                    ))
+                ),
+                Select::make('supir_id')->relationship('supir', 'nama')
+                ->options(function ($get, $record) {
+                    if ($record && $record->supir_id) {
+                        return Supir::where('status', 'Tersedia')
+                            ->orWhere('id', $record->supir_id)
+                            ->pluck('nama', 'id');
+                    }
+
+                    return Supir::where('status', 'Tersedia')
+                        ->pluck('nama', 'id');
+                })
+                ->reactive()
+                ->afterStateUpdated(function($state, callable $set, $get) {
+                    $set('harga', Rental::hitungTotalHarga(
+                        $get('kendaraan_id'),
+                        $state,
+                        $get('tgl_pinjam'),
+                        $get('tgl_kembali'),
+                        $get('perlengkapan')
+                    ));
+
+                    if ($state) {
+                        $supir = Supir::find($state);
+                        if ($supir) {
+                            $supir->update(['status' => 'Bertugas']);
+                        }
+                    }
+                }),
                 Select::make('pelanggan_id')->relationship('pelanggan', 'nama'),
                 Repeater::make('perlengkapan')
                 ->schema([
                     Select::make('perlengkapan_id')->label('Perlengkapan')
-                        ->options(Perlengkapan::all()->pluck('nama', 'id'))->reactive()
+                        ->options(Perlengkapan::where('stok', '>', 0)->pluck('nama', 'id'))->reactive()
                         ->afterStateUpdated(function (callable $set, $state, $get) {
                             $perlengkapan = Perlengkapan::find($state);
                             if ($perlengkapan) {
                                 $quantity = $get('stok') ?? 1;
+                                $set('max_stok', $perlengkapan->stok);
                                 $set('harga', $perlengkapan->harga * $quantity);
                             }
                         }),
                     TextInput::make('stok')->numeric()->label('Qty')->reactive()
+                        ->rules([
+                            fn (Get $get): string => "max:{$get('max_stok')}",
+                        ])
+                        ->helperText(fn (Get $get): string => "Stok tersedia: {$get('max_stok')}")
                         ->afterStateUpdated(function (callable $set, $state, $get) {
                             $hargaSatuan = $get('perlengkapan_id')
                                 ? Perlengkapan::find($get('perlengkapan_id'))->harga
                                 : 0;
                             $set('harga', $hargaSatuan * $state);
                         }),
+                TextInput::make('max_stok')->hidden(),
                 ])->reactive()
                     ->afterStateUpdated(fn($state, callable $set, $get) =>
                         $set('harga', Rental::hitungTotalHarga(
@@ -116,7 +151,34 @@ class RentalResource extends Resource
                         'Pending' => 'Pending',
                         'Berlangsung' => 'Berlangsung',
                         'Selesai' => 'Selesai',
-                ])->inline()->default('Pending'),
+                ])->inline()->default('Pending')
+                ->reactive()
+                    ->afterStateUpdated(function ($state, $record) {
+                        if ($state === 'Selesai' && $record) {
+                            $kendaraan = Kendaraan::find($record->kendaraan_id);
+                            if ($kendaraan) {
+                                $kendaraan->update(['status' => 'Tersedia']);
+                            }
+
+                            $supir = Supir::find($record->supir_id);
+                            if ($supir) {
+                                $supir->update(['status' => 'Tersedia']);
+                            }
+
+                            if ($record->perlengkapan) {
+                                foreach ($record->perlengkapan as $item) {
+                                    if (isset($item['perlengkapan_id']) && isset($item['stok'])) {
+                                        $perlengkapan = Perlengkapan::find($item['perlengkapan_id']);
+                                        if ($perlengkapan) {
+                                            $perlengkapan->update([
+                                                'stok' => $perlengkapan->stok + $item['stok']
+                                            ]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }),
             ]);
     }
 
